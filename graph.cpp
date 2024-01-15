@@ -34,3 +34,9 @@ int dfsMaxAreaOfIsland(vector<vector<int>>& grid,int x,int y) {
     return temp;
 }
 
+/**
+ * LCR 106. 判断二分图
+*/
+bool isBipartite(vector<vector<int>>& graph) {
+
+}
