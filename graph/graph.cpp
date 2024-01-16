@@ -37,6 +37,31 @@ int dfsMaxAreaOfIsland(vector<vector<int>>& grid,int x,int y) {
 /**
  * LCR 106. 判断二分图
 */
+bool ans = true;
 bool isBipartite(vector<vector<int>>& graph) {
+    int len = graph.size();
+    vector<int> arr(len,-1);
+    int cnt = 1;
+    for(int i = 0;i<len;i++) {
+        if(arr[i] == -1) {
+            bfsIsBipartite(graph,arr,i,1);
+        }
+    }
+    return ans;
+}
 
+void bfsIsBipartite(vector<vector<int>>& graph,vector<int>& arr,int index,int cnt) {
+    arr[index] = cnt;
+    int cn = (cnt == 1 ? 2 : 1);
+    for(int i : graph[index]) {
+        if(arr[i] == 0) {
+            bfsIsBipartite(graph,arr,i,cn);
+            if(!ans) {
+                return;
+            }
+        }else if(arr[i] != cn) {
+            ans = false;
+            return;
+        }
+    }
 }
