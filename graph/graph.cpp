@@ -1,6 +1,7 @@
 #include<algorithm>
 #include<vector>
 #include<iostream>
+#include<queue>
 using namespace std;
 /**
  * LCR 105. 岛屿的最大面积
@@ -40,10 +41,9 @@ int dfsMaxAreaOfIsland(vector<vector<int>>& grid,int x,int y) {
 bool ans = true;
 bool isBipartite(vector<vector<int>>& graph) {
     int len = graph.size();
-    vector<int> arr(len,-1);
-    int cnt = 1;
+    vector<int> arr(len,0);
     for(int i = 0;i<len;i++) {
-        if(arr[i] == -1) {
+        if(arr[i] == 0) {
             bfsIsBipartite(graph,arr,i,1);
         }
     }
@@ -65,3 +65,42 @@ void bfsIsBipartite(vector<vector<int>>& graph,vector<int>& arr,int index,int cn
         }
     }
 }
+
+vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+    int row = mat.size();
+    int col = mat[0].size();
+    vector<vector<int>> ans(row,vector<int>(col,-1));
+    vector<vector<int>> visited(row,vector<int>(col,0));
+    queue<pair<int,int>> q;
+    for(int i = 0;i<row;i++) {
+        for(int j = 0;j<col;j++) {
+            if(mat[i][j] == 0) {
+                q.emplace(i,j);
+                ans[i][j] = 0;
+                visited[i][j] = 1;
+            }
+        }
+    }
+
+    int x[4] = {1,-1,0,0};
+    int y[4] = {0,0,-1,1};
+    
+    while (!q.empty()) {
+        pair t= q.front();
+        q.pop();
+        int curx = t.first;
+        int cury = t.second;
+
+        for(int i = 0;i<4;i++) {
+            int tx = curx + x[i];
+            int ty = cury + y[i];
+            if(tx >= 0 && tx < row && ty >= 0 && ty < col && visited[tx][ty] == 0) {
+                ans[tx][ty] = ans[curx][cury] + 1;
+                visited[tx][ty] = 1;
+                q.emplace(tx,ty);
+            }
+        }
+    }
+    return ans;
+}
+
