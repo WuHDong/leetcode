@@ -129,22 +129,31 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
     q.emplace(beginWord);
 
     while(!q.empty()) {
-        string cur = q.front();
-        q.pop();
-        
-        for(string s : wordList) {
-            if(!visited[s] && isReachable(cur,s)) {
-                if(s == endWord) {
+       
+        int len = q.size();
+        while(len > 0) {
+            string cur = q.front();
+            
+            q.pop();
+            for(string s : wordList) {
+                if(visited[s]) {
+                    continue;
+                }
+                if(!isReachable(s,cur)){
+                    continue;
+                }
+                if(endWord == s) {
                     return ans +1;
                 }
-                q.emplace(s);
+
                 visited[s] = true;
+                q.emplace(s);
             }
         }
         ans++;
     }
     
-    return ans;
+    return 0;
 
 }
 
