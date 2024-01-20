@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<queue>
+#include<unordered_map>
 using namespace std;
 /**
  * LCR 105. 岛屿的最大面积
@@ -65,7 +66,9 @@ void bfsIsBipartite(vector<vector<int>>& graph,vector<int>& arr,int index,int cn
         }
     }
 }
-
+/**
+ * LCR 107. 01 矩阵
+*/
 vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
     int row = mat.size();
     int col = mat[0].size();
@@ -102,5 +105,71 @@ vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
         }
     }
     return ans;
+}
+
+/**
+ * LCR 108. 单词接龙
+*/
+int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+    bool isExist = false;
+    unordered_map<string,bool> visited;
+    for(string s : wordList) {
+        visited[s] = false;
+        if(s == endWord) {
+            isExist = true;
+        }
+    }
+
+    if(!isExist) {
+        return 0;
+    }
+
+    queue<string> q;
+    int ans = 1;
+    q.emplace(beginWord);
+
+    while(!q.empty()) {
+       
+        int len = q.size();
+        while(len > 0) {
+            string cur = q.front();
+            
+            q.pop();
+            for(string s : wordList) {
+                if(visited[s]) {
+                    continue;
+                }
+                if(!isReachable(s,cur)){
+                    continue;
+                }
+                if(endWord == s) {
+                    return ans +1;
+                }
+
+                visited[s] = true;
+                q.emplace(s);
+            }
+        }
+        ans++;
+    }
+    
+    return 0;
+
+}
+
+bool isReachable(string begin,string end) {
+    if(begin.size() != end.size()) {
+        return false;
+    }
+    int cnt = 0;
+    for(int i = 0;i<begin.size();i++) {
+        if(begin[i] != end[i]) {
+            cnt++;
+        }
+        if(cnt > 1) {
+            return false;
+        }
+    }
+    return true;
 }
 
