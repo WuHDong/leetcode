@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<queue>
+#include<string>
 #include<unordered_map>
 using namespace std;
 
@@ -30,4 +31,32 @@ vector<string> splitWordsBySeparator(vector<string>& words, char separator) {
         }
     }
     return ans;
+}
+
+/**
+ * 670. 最大交换
+*/
+int maximumSwap(int num) {
+    string s = to_string(num);
+    int len = s.size();
+
+    int maxV = -1;
+    for(int i = 0;i<len;i++) {
+        for(int j = i+1;j<len;j++) {
+            if(s[j] > s[i]) {
+                string st = s;
+                char t = st[i];
+                st[i] = st[j];
+                st[j] = t;
+
+                if(maxV < stoi(st)) {
+                    maxV = stoi(st);
+                }
+            }
+        }
+    }
+    if(maxV == -1) {
+        return num;
+    }
+    return maxV;
 }
