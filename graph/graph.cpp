@@ -3,6 +3,7 @@
 #include<iostream>
 #include<queue>
 #include<unordered_map>
+#include<unordered_set>
 using namespace std;
 /**
  * LCR 105. 岛屿的最大面积
@@ -111,65 +112,48 @@ vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
  * LCR 108. 单词接龙
 */
 int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-    bool isExist = false;
-    unordered_map<string,bool> visited;
-    for(string s : wordList) {
-        visited[s] = false;
-        if(s == endWord) {
-            isExist = true;
-        }
+    unordered_set<string> hashset;
+
+    for(string s:wordList) {
+        hashset.emplace(s);
     }
 
-    if(!isExist) {
+    if(!hashset.count(endWord)) {
         return 0;
     }
 
     queue<string> q;
-    int ans = 1;
-    q.emplace(beginWord);
+    q.push(beginWord);
 
+    int len = 0;
     while(!q.empty()) {
-       
-        int len = q.size();
-        while(len > 0) {
+        int sz = q.size();
+        len++;
+        while(sz--) {
             string cur = q.front();
-            
             q.pop();
-            for(string s : wordList) {
-                if(visited[s]) {
-                    continue;
-                }
-                if(!isReachable(s,cur)){
-                    continue;
-                }
-                if(endWord == s) {
-                    return ans +1;
-                }
-
-                visited[s] = true;
-                q.emplace(s);
+            hashset.erase(cur);
+            if(cur == endWord) {
+                return len;
             }
+            
+            bfsLadderLength(cur,hashset,q);
         }
-        ans++;
     }
-    
     return 0;
-
 }
 
-bool isReachable(string begin,string end) {
-    if(begin.size() != end.size()) {
-        return false;
-    }
-    int cnt = 0;
-    for(int i = 0;i<begin.size();i++) {
-        if(begin[i] != end[i]) {
-            cnt++;
+void bfsLadderLength(string& word,unordered_set<string>& hashset,queue<string>& q) {
+
+    for(int i = 0;i<word.size();i++) {
+        char temp = word[i];
+        for(char j = 'a'; j<='z';j++) {
+            word[i] = j;
+            if(j != temp && !hashset.count(word)) {
+                hashset.emplace(word);
+            }
+            word[i] = temp;
         }
-        if(cnt > 1) {
-            return false;
-        }
     }
-    return true;
 }
 
