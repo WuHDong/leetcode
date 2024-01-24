@@ -157,3 +157,74 @@ void bfsLadderLength(string& word,unordered_set<string>& hashset,queue<string>& 
     }
 }
 
+
+/**
+ * LCR 109. 打开转盘锁
+*/
+int openLock(vector<string>& deadends, string target) {
+    unordered_set<string> hashset;
+    for(string s : deadends) {
+        hashset.emplace(s);
+    }
+
+    if(hashset.count("0000")) {
+        return -1;
+    }
+
+    if(target == "0000") {
+        return 0;
+    }
+    unordered_set<string> hs;
+    queue<string> q;
+
+    hs.emplace("0000");
+    q.push("0000");
+    int ans = 0;
+    while(!q.empty()) {
+        int len = q.size();
+        ans++;
+        while(len--) {
+            string cur = q.front();
+            q.pop();
+            for(string status : getStatus(cur)) {
+                if(!hs.count(status) && !hashset.count(status)) {
+                    if(status == target) {
+                        return ans;
+                    }
+                    hs.emplace(status);
+                    q.push(status);
+                }
+            }
+        }
+
+    }
+    return -1;
+}
+vector<string> getStatus(string s) {
+    vector<string> ans;
+    for(int i = 0;i<4;i++) {
+        string pre = changeOnePre(s,i);
+        string after = changeOneAfter(s,i);
+        ans.push_back(pre);
+        ans.push_back(after);
+    }
+    return ans;
+}
+
+string changeOneAfter(string s,int i) {
+    if(s[i] == '0') {
+        s[i] = '9';
+    }else{
+        s[i] -= 1;
+    }
+    return s;
+}
+
+string changeOnePre(string s,int i) {
+    if(s[i] == '9') {
+        s[i] = '0';
+    }else{
+        s[i] += 1;
+    }
+    return s;
+}
