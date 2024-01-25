@@ -228,3 +228,34 @@ string changeOnePre(string s,int i) {
     }
     return s;
 }
+
+
+/**
+ * LCR 110. 所有可能的路径
+*/
+vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+    int len = graph.size();
+    vector<vector<int>> ans;
+    vector<int> arr;
+    arr.push_back(0);
+    dfsAllPathsSourceTarget(graph,ans,0,arr);
+    return ans;
+
+}
+
+void dfsAllPathsSourceTarget(vector<vector<int>>& graph,
+        vector<vector<int>>& ans, int index, vector<int>& arr){
+    
+    if(index == graph.size()-1) {
+        arr.push_back(index);
+        ans.push_back(arr);
+        arr.pop_back();
+        return;
+    }
+    
+    arr.push_back(index);
+    for(int cur : graph[index]) {
+        dfsAllPathsSourceTarget(graph,ans,cur,arr);
+    }
+    arr.pop_back();
+}
