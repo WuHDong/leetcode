@@ -5,6 +5,7 @@
         "xstring": "cpp",
         "unordered_set": "cpp",
         "xhash": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "unordered_map": "cpp"
     }
 }
