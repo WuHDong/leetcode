@@ -259,3 +259,56 @@ void dfsAllPathsSourceTarget(vector<vector<int>>& graph,
     }
     arr.pop_back();
 }
+
+vector<double> calcEquation(vector<vector<string>>& equations, 
+            vector<double>& values, vector<vector<string>>& queries) {
+    
+    unordered_set<string> hashset;
+    unordered_map<string,int> mapping;
+    int index = 0;
+    int len = equations.size();
+    for(int i = 0;i<len;i++) {
+        if(!mapping.count(equations[i][0])) {
+            mapping[equations[i][0]] = index;
+            index++;
+        }
+
+        if(!mapping.count(equations[i][1])) {
+            mapping[equations[i][1]] = index;
+            index++;
+        }
+    }
+
+    vector<vector<double>> arr(index,vector<double>(index,-1));
+
+    for(int i = 0;i<len;i++) {
+        int x = mapping[equations[i][0]];
+        int y = mapping[equations[i][1]];
+
+        arr[x][y] = values[i];
+        arr[y][x] = 1/values[i];
+    }
+
+    for(int i =0;i<index;i++) {
+        for(int j = 0;j<index;j++) {
+            for(int k = 0;k<index;k++) {
+                if(arr[k][i] != -1 && arr[i][j] != -1) {
+                    arr[k][j] = arr[k][i] * arr[i][j];
+                    arr[j][k] = arr[i][k] * arr[j][i];
+                }
+            }
+        }
+    }
+
+    vector<double> ans;
+    for(int i = 0;i<queries.size();i++) {
+        if(!mapping.count(queries[i][0]) || !mapping.count(queries[i][1])) {
+            ans.push_back(-1);
+            continue;
+        }
+        int x = mapping[queries[i][0]];
+        int y = mapping[queries[i][1]];
+        ans.push_back(arr[x][y]);
+    }
+    return ans;
+}
