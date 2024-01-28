@@ -259,7 +259,9 @@ void dfsAllPathsSourceTarget(vector<vector<int>>& graph,
     }
     arr.pop_back();
 }
-
+/**
+ * LCR 111. 除法求值
+*/
 vector<double> calcEquation(vector<vector<string>>& equations, 
             vector<double>& values, vector<vector<string>>& queries) {
     
@@ -309,6 +311,61 @@ vector<double> calcEquation(vector<vector<string>>& equations,
         int x = mapping[queries[i][0]];
         int y = mapping[queries[i][1]];
         ans.push_back(arr[x][y]);
+    }
+    return ans;
+}
+
+/**
+ * LCR 113. 课程表 II
+*/
+vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<int> ans;
+    if(prerequisites.size()== 0) {
+        for(int i = 0;i<numCourses;i++){
+            ans.push_back(i);
+        }
+        return ans;
+    }
+
+    vector<int> ls(numCourses,0);
+    vector<vector<int>> arr(numCourses);
+    for(auto p : prerequisites) {
+        arr[p[1]].push_back(p[0]);
+        ls[p[0]] = 1;
+    }
+
+    int head = -1;
+    for(int i = 0;i<numCourses;i++) {
+        if(ls[i] == 0) {
+            head = i;
+        }
+    }
+
+    vector<int> visited(numCourses,0);
+    visited[head] = 1;
+    queue<int> q;
+    q.push(head);
+    
+    ans.push_back(head);
+    while(!q.empty()) {
+        int cur = q.front();
+        q.pop();
+        for(int index : arr[cur]) {
+            if(visited[index] == 0) {
+                q.push(index);
+                ans.push_back(index);
+                visited[index] = 1;
+            }
+        }
+    }
+
+    if(ans.size() < numCourses) {
+        for(int i = 0;i<numCourses;i++) {
+            if(visited[i] == 0) {
+                ans.push_back(i);
+                visited[i]=1;
+            }
+        }
     }
     return ans;
 }
