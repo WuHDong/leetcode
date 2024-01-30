@@ -359,3 +359,42 @@ vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
     }
     return ans;
 }
+
+/**
+ * LCR 115. 序列重建
+*/
+bool sequenceReconstruction(vector<int>& nums, vector<vector<int>>& sequences) {
+    int len = nums.size();
+    vector<unordered_set<int>> graph(len+1);
+    vector<int> arr(len+1);
+
+    for(int i = 0;i<sequences.size();i++) {
+        for(int j = 0;j<sequences[i].size()-1;j++) {
+            graph[sequences[i][j]].emplace(sequences[i][j+1]);
+            arr[sequences[i][j+1]]++;
+        }
+    }
+
+    queue<int> q;
+    for(int i = 1;i<len+1;i++) {
+        if(arr[i] == 0) {
+            q.emplace(i);
+        }
+    }
+
+    while(!q.empty()) {
+        if(q.size()!=1) {
+            return false;
+        }
+        int cur = q.front();
+        q.pop();
+
+        for(int next : graph[cur]) {
+            arr[next]--;
+            if(arr[next] == 0) {
+                q.emplace(next);
+            }
+        }
+    }
+    return true;
+}
