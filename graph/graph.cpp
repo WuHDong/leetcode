@@ -398,3 +398,32 @@ bool sequenceReconstruction(vector<int>& nums, vector<vector<int>>& sequences) {
     }
     return true;
 }
+
+/**
+ * LCR 116. 省份数量
+*/
+int findCircleNum(vector<vector<int>>& isConnected) {
+    int len = isConnected.size();
+    vector<int> visited(len,0);
+    int ans;
+    for(int i = 0;i<len;i++) {
+        if(visited[i] == 0) {
+            ans++;
+            visited[i] = 1;
+            dfsFindCircleNum(isConnected,visited,i);
+        }
+    }
+    return ans;
+}
+
+void dfsFindCircleNum(vector<vector<int>>& isConnected,vector<int>& visited,int pre) {
+
+    for(int i = 0;i<isConnected.size();i++) {
+        if(isConnected[pre][i] == 1) {
+            if(visited[i]==0) {
+                visited[i] = 1;
+                dfsFindCircleNum(isConnected,visited,i);
+            }
+        }
+    }
+}
