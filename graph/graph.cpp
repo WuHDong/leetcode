@@ -427,3 +427,39 @@ void dfsFindCircleNum(vector<vector<int>>& isConnected,vector<int>& visited,int 
         }
     }
 }
+
+/**
+ * LCR 118. 冗余连接
+ * 并查集实现
+*/
+
+int findParent(vector<int>& parent, int x) {
+    if(parent[x] != x) {
+        parent[x] = findParent(parent,parent[x]);
+    }
+    return parent[x];
+}
+void unionNode(vector<int>& parent,int x,int y) {
+    parent[findParent(parent,x)] = findParent(parent,y);
+}
+
+vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+    int len = edges.size();
+    vector<int> parent(len+1);
+    for(int i = 0;i<len+1;i++) {
+        parent[i] = i;
+    }
+
+    for(auto edge:edges) {
+        int x = edge[0];
+        int y = edge[1];
+
+        if(findParent(parent,x) != findParent(parent,y)) {
+            unionNode(parent,x,y);
+        }else{
+            return edge;
+        }
+    }
+
+    return vector<int>{};
+}
