@@ -463,3 +463,62 @@ vector<int> findRedundantConnection(vector<vector<int>>& edges) {
 
     return vector<int>{};
 }
+
+
+/**
+ * LCR 114. 火星词典
+*/
+string alienOrder(vector<string>& words) {
+
+    vector<vector<int>> graph(26,vector<int>(26,0));
+    
+    string pre = words[0];
+    char c = pre[0];
+    for(int i = 1;i<words.size();i++) {
+        int len = min(pre.size(),words[i].size());
+        for(int j = 0; j < len;j++) {
+            if(pre[j] == words[i][j]) {
+                continue;
+            }else{
+                bool findPath = false;
+                for(int k = 0;k<26;k++) {
+                    if(graph[pre[j]-'a'][k] != 0) {
+                        if(graph[k][words[i][j]-'a'] == 1) {
+                            findPath = true;
+                            break;
+                        }
+                    }
+                }
+                if(graph[words[i][j] - 'a'][pre[j]-'a'] == 1) {
+                    return "";
+                }
+                if(!findPath) {
+                    graph[pre[j]-'a'][words[i][j] - 'a'] = 1;
+                }
+            }
+        }
+        pre = words[i];
+    }
+
+    string ans ="";
+    ans.push_back(c);
+    bool find = true;
+    int index = c - 'a';
+    while(find) {
+        int cur = -1;
+        for(int i = 0;i<26;i++) {
+            if(graph[index][i] == 1) {
+                ans += 'a'+graph[index][i];
+                cur = i;
+                break;
+            }
+        }
+        if(cur == -1) {
+            find = false;
+        }else{
+            index = cur;
+        }
+        
+    }
+    return ans;
+}
