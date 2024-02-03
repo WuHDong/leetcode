@@ -468,57 +468,70 @@ vector<int> findRedundantConnection(vector<vector<int>>& edges) {
 /**
  * LCR 114. 火星词典
 */
+unordered_map<char,vector<char>> graph;
+unordered_map<char,int> inCnt;
+bool valid = true;
 string alienOrder(vector<string>& words) {
-
-    vector<vector<int>> graph(26,vector<int>(26,0));
-    
-    string pre = words[0];
-    char c = pre[0];
-    for(int i = 1;i<words.size();i++) {
-        int len = min(pre.size(),words[i].size());
-        for(int j = 0; j < len;j++) {
-            if(pre[j] == words[i][j]) {
-                continue;
-            }else{
-                bool findPath = false;
-                for(int k = 0;k<26;k++) {
-                    if(graph[pre[j]-'a'][k] != 0) {
-                        if(graph[k][words[i][j]-'a'] == 1) {
-                            findPath = true;
-                            break;
-                        }
-                    }
-                }
-                if(graph[words[i][j] - 'a'][pre[j]-'a'] == 1) {
-                    return "";
-                }
-                if(!findPath) {
-                    graph[pre[j]-'a'][words[i][j] - 'a'] = 1;
-                }
+    int len = words.size();
+    for(string word : words) {
+        int l = word.size();
+        for(int i = 0;i<l;i++) {
+            if(!graph.count(word[i])) {
+                graph[word[i]] = vector<char>();
             }
         }
-        pre = words[i];
+    }
+    for(int i = 1;i<len;i++) {
+        addEdges(words[i-1],words[i]);
     }
 
-    string ans ="";
-    ans.push_back(c);
-    bool find = true;
-    int index = c - 'a';
-    while(find) {
-        int cur = -1;
-        for(int i = 0;i<26;i++) {
-            if(graph[index][i] == 1) {
-                ans += 'a'+graph[index][i];
-                cur = i;
-                break;
-            }
+    if(!valid) {
+        return "";
+    }
+
+    queue<char> q;
+    for(auto t : graph) {
+        if(!inCnt.count(t.first)) {
+            q.push(t.first);
         }
-        if(cur == -1) {
-            find = false;
-        }else{
-            index = cur;
-        }
+    }
+    string ans = "";
+    while(!q.empty()) {
+        char c = q.front();
+        q.pop();
+        ans += c;
         
+        for(char u : graph[c]) {
+            inCnt[u]--;
+            if(inCnt[u] == 0) {
+                q.push(u);
+            }
+        }
     }
-    return ans;
+
+    return ans.size() == graph.size() ? ans : "";
+
+}
+
+void addEdges(string before,string after) {
+    int len1 = before.size();
+    int len2 = after.size();
+
+    int length = min(len1,len2);
+    int index = 0;
+    while(index < length) {
+        if(before[index] == after[index]) {
+            index++;
+            continue;
+        }else{
+            inCnt[after[index]]++;
+            graph[before[index]].emplace_back(after[index]);
+            break;
+        }
+    }
+
+    if(index == length && len1 > len2) {
+        valid = false;
+    }
+
 }
