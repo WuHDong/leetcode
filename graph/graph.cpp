@@ -533,5 +533,48 @@ void addEdges(string before,string after) {
     if(index == length && len1 > len2) {
         valid = false;
     }
+}
 
+/**
+ * LCR 112. 矩阵中的最长递增路径
+*/
+int longestIncreasingPath(vector<vector<int>>& matrix) {
+
+    if(matrix.size() == 0 || matrix[0].size() == 0) {
+        return 0;
+    }
+
+    int row = matrix.size();
+    int col = matrix[0].size();
+
+    vector<vector<int>> mem(row,vector<int>(col,0));
+    int ans = 0;
+    for(int i = 0;i<row;i++) {
+        for(int j = 0;j<col;j++) {
+            if(mem[i][j] == 0) {
+                mem[i][j] = dfsLongestIncreasingPath(matrix,mem,i,j);
+            }
+            ans = max(ans,mem[i][j]);
+        }
+    }
+    return ans;
+}
+
+int dfsLongestIncreasingPath(vector<vector<int>>& matrix,vector<vector<int>>& mem,int curx,int cury) {
+    
+    if(mem[curx][cury] != 0) {
+        return mem[curx][cury];
+    }
+
+
+    mem[curx][cury] = 1;
+    for(int i = 0;i < 4;i++) {
+        int x = curx + x1[i];
+        int y = cury + y1[i];
+        if(x < 0 || x >= matrix.size() || y < 0 || y >= matrix[0].size()|| matrix[x][y] <= matrix[curx][cury]) {
+            continue;
+        }
+        mem[curx][cury] = max(mem[curx][cury],dfsLongestIncreasingPath(matrix,mem,x,y)+1);
+    }  
+    return mem[curx][cury];
 }
