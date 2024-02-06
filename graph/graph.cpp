@@ -578,3 +578,49 @@ int dfsLongestIncreasingPath(vector<vector<int>>& matrix,vector<vector<int>>& me
     }  
     return mem[curx][cury];
 }
+
+/**
+ * 相似字符串
+*/
+int Cnt = 0;
+
+int numSimilarGroups(vector<string>& strs) {
+    int ans = 0;
+    int len = strs.size();
+    if(len == 0 || len == 1) {
+        return ans;
+    }
+    Cnt = len;
+    vector<int> parent(len,0);
+    for(int i = 0;i<len;i++) {
+        parent[i] = i;
+    }
+
+    for(int i = 0;i < len;i++) {
+        string pre = strs[i];
+        for(int j = i+1; j<len; j++) {
+            if(isSample(pre,strs[j])) {
+                if(findParent(parent,i) != findParent(parent,j)){
+                    unionNode(parent,i,j);
+                    Cnt--;
+                }
+            }
+        }
+    }
+    return Cnt;
+
+}
+
+bool isSample(string s1,string s2) {
+    bool ans = false;
+    int cnt = 0;
+    for(int i = 0;i<s1.size();i++) {
+        if(s1[i] != s2[i]) {
+            cnt++;
+        }
+    }
+    if(cnt == 0 || cnt == 2) {
+        ans = true;
+    }
+    return ans;
+}
