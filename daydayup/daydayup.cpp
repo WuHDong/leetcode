@@ -61,3 +61,65 @@ int maximumSwap(int num) {
     return maxV;
 }
 
+/**
+ * 15. 三数之和
+*/
+vector<vector<int>> threeSum(vector<int>& nums) {
+    vector<vector<int>> ans;
+    sort(nums.begin(),nums.end());
+
+    if(nums[0] > 0) {
+        return ans;
+    }
+
+    int len = nums.size();
+    for(int i = 0;i<len;i++) {
+        if(i > 0 && nums[i] == nums[i-1]) {
+            continue;
+        }
+        int target = -nums[i];
+        int third = len-1;
+        for(int j = i+1;j<len;j++) {
+            if(j > i+1 && nums[j] == nums[j-1]) {
+                continue;
+            }
+            while(third > j && nums[j] + nums[third] > target) {
+                third--;
+            }
+
+            if(third == j) {
+                break;
+            }
+            if(nums[j] + nums[third] == target) {
+                ans.push_back({nums[i],nums[j],nums[third]});
+            }
+        }
+    }
+    return ans;
+}
+
+/**
+ * 135. 分发糖果
+*/
+int candy(vector<int>& ratings) {
+    int ans = 1;
+    int pre = 1;
+    int dec = 0;
+    int inc = 1;
+    for(int i = 1;i<ratings.size();i++) {
+        if(ratings[i] >= ratings[i-1]) {
+            dec = 0;
+            pre = ratings[i] == ratings[i-1] ? 1 : pre +1;
+            ans += pre;
+            inc = pre;
+        }else{
+            dec++;
+            if(dec == inc) {
+                dec++;
+            }
+            ans += dec;
+            pre = 1;
+        }
+    }
+    return ans;
+}
