@@ -97,3 +97,29 @@ vector<vector<int>> threeSum(vector<int>& nums) {
     }
     return ans;
 }
+
+/**
+ * 135. 分发糖果
+*/
+int candy(vector<int>& ratings) {
+    int ans = 1;
+    int pre = 1;
+    int dec = 0;
+    int inc = 1;
+    for(int i = 1;i<ratings.size();i++) {
+        if(ratings[i] >= ratings[i-1]) {
+            dec = 0;
+            pre = ratings[i] == ratings[i-1] ? 1 : pre +1;
+            ans += pre;
+            inc = pre;
+        }else{
+            dec++;
+            if(dec == inc) {
+                dec++;
+            }
+            ans += dec;
+            pre = 1;
+        }
+    }
+    return ans;
+}
