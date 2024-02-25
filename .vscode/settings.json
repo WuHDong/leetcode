@@ -8,6 +8,7 @@
         "xiosbase": "cpp",
         "unordered_map": "cpp",
         "iostream": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "utility": "cpp"
     }
 }
