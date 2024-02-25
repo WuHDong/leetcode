@@ -7,6 +7,7 @@
         "xhash": "cpp",
         "xiosbase": "cpp",
         "unordered_map": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "deque": "cpp"
     }
 }
