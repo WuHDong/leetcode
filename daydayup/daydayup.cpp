@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<queue>
+#include<stack>
 #include<string>
 #include<unordered_map>
 using namespace std;
@@ -176,5 +177,39 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
         ans[i] = t;
         st.push_back(heights[i]);
     }
+    return ans;
+}
+
+/**
+ * 84. 柱状图中最大的矩形
+*/
+int largestRectangleArea(vector<int>& heights) {
+    int ans = 0;
+    int len = heights.size();
+    stack<int> st;
+    vector<int> left(len),right(len);
+
+    for(int i = 0;i<len;i++) {
+        while (!st.empty() && heights[st.top()] >= heights[i])
+        {
+            st.pop();
+        }
+        
+        left[i] = st.empty() ? -1 : st.top();
+        st.push(i);
+    }
+    stack<int> sr;
+    for(int i = len; i>=0; i--) {
+        while(!sr.empty() && heights[sr.top()] >= heights[i]) {
+            sr.top();
+        }
+        right[i] = sr.empty() ? len : sr.top();
+        sr.push(i);
+    }
+
+    for(int i = 0;i<len;i++) {
+        ans = max(ans,(right[i] - left[i] -1)*heights[i]);
+    }
+
     return ans;
 }
