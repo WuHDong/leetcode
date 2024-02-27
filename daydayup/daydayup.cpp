@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<queue>
+#include<stack>
 #include<string>
 #include<unordered_map>
 using namespace std;
@@ -121,5 +122,94 @@ int candy(vector<int>& ratings) {
             pre = 1;
         }
     }
+    return ans;
+}
+
+/**
+ * LCR 183. 望远镜中最高的海拔
+*/
+vector<int> maxAltitude(vector<int>& heights, int limit) {
+    
+    deque<int> dq;
+    vector<int> ans;
+    int len = heights.size();
+    if(len == 0) {
+        return ans;
+    }
+    for(int i = 0;i<limit;i++) {
+        while(!dq.empty() && heights[dq.back()] < heights[i]) {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+    }
+    ans.push_back(heights[dq.front()]);
+    for(int i = limit; i < len; i++) {
+        while(!dq.empty() && heights[dq.back()] < heights[i]) {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+
+        while(dq.front() <= i - limit) {
+            dq.pop_front();
+        }
+        ans.push_back(heights[dq.front()]);
+    }
+    return ans;
+} 
+
+/**
+ * 1944. 队列中可以看到的人数
+*/
+vector<int> canSeePersonsCount(vector<int>& heights) {
+    int len = heights.size();
+    vector<int> ans(len,0);
+    vector<int> st;
+
+    for(int i = len -1;i>=0;i--) {
+        int t = 0;
+        while(!st.empty() && heights[i] > st.back()) {
+            st.pop_back();
+            t++;
+        }
+        if(!st.empty()) {
+            t++;
+        }
+        ans[i] = t;
+        st.push_back(heights[i]);
+    }
+    return ans;
+}
+
+/**
+ * 84. 柱状图中最大的矩形
+*/
+int largestRectangleArea(vector<int>& heights) {
+    int ans = 0;
+    int len = heights.size();
+    stack<int> st;
+    vector<int> left(len),right(len);
+
+    for(int i = 0;i<len;i++) {
+        while (!st.empty() && heights[st.top()] >= heights[i])
+        {
+            st.pop();
+        }
+        
+        left[i] = st.empty() ? -1 : st.top();
+        st.push(i);
+    }
+    stack<int> sr;
+    for(int i = len; i>=0; i--) {
+        while(!sr.empty() && heights[sr.top()] >= heights[i]) {
+            sr.top();
+        }
+        right[i] = sr.empty() ? len : sr.top();
+        sr.push(i);
+    }
+
+    for(int i = 0;i<len;i++) {
+        ans = max(ans,(right[i] - left[i] -1)*heights[i]);
+    }
+
     return ans;
 }
